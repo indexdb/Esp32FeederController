@@ -19,6 +19,7 @@
 #include "FeederManager.hxx"
 #include "WiFiManager.hxx"
 #include "GCodeServer.hxx"
+#include "RGBLed.hxx"
 #include "Utils.hxx"
 #include "SocInfo.hxx"
 
@@ -28,7 +29,8 @@ static_assert(__builtin_strlen(WIFI_SSID) > 0,
 static_assert(__builtin_strlen(WIFI_HOSTNAME) < 32,
               "Hostname length must not exceed 32 characters");
 
-static WiFiManager wifi(WIFI_SSID, WIFI_PASSWORD, WIFI_HOSTNAME);
+// static WiFiManager wifi(WIFI_SSID, WIFI_PASSWORD, WIFI_HOSTNAME);
+static WiFiManager wifi(WIFI_SSID, WIFI_PASSWORD, WIFI_HOSTNAME,WIFI_IP_ADRESS,WIFI_NETMASK,WIFI_GATEWAY);
 
 static void worker_task(asio::io_context &context)
 {
@@ -68,6 +70,7 @@ void app_main()
     const esp_app_desc_t *app_data = esp_app_get_description();
     const esp_partition_t *running_from = esp_ota_get_running_partition();
     const char *const TAG = "main";
+	
     esp_chip_info_t chip_info;
 
     esp_chip_info(&chip_info);
@@ -105,6 +108,7 @@ void app_main()
     asio::io_context context;
     GCodeServer gcode_server(context, wifi.get_local_ip());
     FeederManager feeder_mgr(gcode_server, context);
+	RGBLed rgb_led(gcode_server);
     asio::system_timer heap_timer(context, std::chrono::seconds(30));
     std::function<void(asio::error_code)> heap_monitor =
         [&](asio::error_code ec)

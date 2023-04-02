@@ -136,6 +136,7 @@ static inline void configure_log_levels()
       {.tag = "wifi_mgr", .level = ESP_LOG_INFO},
       {.tag = "feeder_mgr", .level = ESP_LOG_INFO},
       {.tag = "soc_info", .level = ESP_LOG_INFO},
+	  {.tag = "RGB_LED", .level = ESP_LOG_INFO},
   };
 
   for (log_level_t log : log_levels)

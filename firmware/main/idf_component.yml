@@ -1,3 +1,4 @@
 dependencies:
+  espressif/led_strip: "^2.3.0"
   idf: ">=5.0"
   asio: "1.*"

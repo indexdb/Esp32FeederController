@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: CC-BY-NC-SA-4.0
  */
-
+#include <netdb.h>
 #include <esp_netif_types.h>
 #include "WiFiManager.hxx"
 
@@ -12,7 +12,13 @@ WiFiManager::WiFiManager(const char *const ssid, const char *const password,
     : ssid_(ssid), password_(password), hostname_(hostname)
 {
 }
-
+WiFiManager::WiFiManager(const char * const ssid, const char * const password,
+				const char * const hostname,
+                const char * const ipaddr,const char * const netmask,
+				const char * const gateway)
+    : ssid_(ssid), password_(password), hostname_(hostname),ipaddr_(ipaddr),netmask_(netmask),gateway_(gateway)
+{
+}
 WiFiManager::~WiFiManager()
 {
     // Disconnect our event handlers
@@ -21,7 +27,11 @@ WiFiManager::~WiFiManager()
     esp_event_handler_unregister(IP_EVENT, ESP_EVENT_ANY_ID,
                                  &WiFiManager::process_idf_event);
 }
-
+bool WiFiManager::isValidIPv4(const char *IPAddress)
+{
+   unsigned int a,b,c,d;
+   return (sscanf(IPAddress,"%d.%d.%d.%d", &a, &b, &c, &d) == 4);
+}
 bool WiFiManager::start()
 {
     wifiStatus_ = xEventGroupCreate();
@@ -34,8 +44,20 @@ bool WiFiManager::start()
                  esp_err_to_name(res));
         abort();
     }
+	
     staIface_ = esp_netif_create_default_wifi_sta();
-
+	
+	///////////////////////////////////////////////
+	if (isValidIPv4((const char *)ipaddr_.c_str())){
+		esp_netif_dhcpc_stop(staIface_);
+		esp_netif_ip_info_t ip;
+		memset(&ip, 0 , sizeof(esp_netif_ip_info_t));
+		ip.ip.addr = ipaddr_addr(ipaddr_.c_str());
+		ip.netmask.addr = ipaddr_addr(netmask_.c_str());
+		ip.gw.addr = ipaddr_addr(gateway_.c_str());	
+		
+		esp_netif_set_ip_info(staIface_, &ip);
+		}
     // Set the generated hostname prior to connecting to the SSID
     // so that it shows up with the generated hostname instead of
     // the default "Espressif".
@@ -135,8 +157,9 @@ void WiFiManager::process_idf_event(void *ctx, esp_event_base_t event_base,
             static_cast<wifi_event_sta_connected_t *>(event_data);
 
         ESP_LOGI(TAG, "Connected to SSID:%s", data->ssid);
-        // Set the flag that indictes we are connected to the SSID.
-        xEventGroupSetBits(wifi_mgr->wifiStatus_, WIFI_CONNECTED_BIT);
+        // Set the flag that indictes we are connected to the SSID.        		
+		
+		xEventGroupSetBits(wifi_mgr->wifiStatus_, WIFI_CONNECTED_BIT);		
     }
     else if (event_base == WIFI_EVENT &&
              event_id == WIFI_EVENT_STA_DISCONNECTED)

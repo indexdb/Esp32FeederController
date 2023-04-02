@@ -11,9 +11,12 @@
 
 /// WiFi AP to connect to.
 static constexpr const char * const WIFI_SSID = "";
-
 /// Password to use for @ref WIFI_SSID.
 static constexpr const char * const WIFI_PASSWORD = "";
+
+static constexpr const char * const WIFI_IP_ADRESS = "192.168.1.50";
+static constexpr const char * const WIFI_NETMASK = "255.255.255.0";
+static constexpr const char * const WIFI_GATEWAY = "192.168.1.1";
 
 /// Hostname to assign to the device upon connection to WiFi.
 static constexpr const char * const WIFI_HOSTNAME = "esp32feeder";
@@ -54,3 +57,10 @@ static constexpr uint32_t I2C_BUS_SPEED = 100000;
 
 /// NVS namespace to use for all configuration data.
 static constexpr const char * const NVS_FEEDER_NAMESPACE = "esp32feeder";
+
+/// Pin to use for I2C SCL.
+static constexpr gpio_num_t RGB_LED1_PIN_NUM = GPIO_NUM_13;
+
+/// Pin to use for I2C SDA.
+static constexpr gpio_num_t RGB_LED2_PIN_NUM = GPIO_NUM_17;
+static constexpr uint8_t RGB_LED_COUNT = 12;

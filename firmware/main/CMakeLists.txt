@@ -8,6 +8,7 @@ set(IDF_DEPS
     heap
     nvs_flash
     pthread
+	led_strip 
     vfs)
 
 idf_component_register(

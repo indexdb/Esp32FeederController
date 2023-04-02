@@ -25,7 +25,9 @@ public:
     /// @param hostname Hostname to assign to this device.
     WiFiManager(const char * const ssid, const char * const password,
                 const char * const hostname);
-
+	WiFiManager(const char * const ssid, const char * const password, const char * const hostname,
+                const char * const ipaddr,const char * const netmask,
+				const char * const gateway);
     /// Destructor.
     ~WiFiManager();
 
@@ -45,8 +47,6 @@ public:
     /// @param event_data Event data provided by ESP-IDF, can be null.
     static void process_idf_event(void *ctx, esp_event_base_t event_base,
                                   int32_t event_id, void *event_data);
-
-
     /// @returns Currently assigned IP address.
     esp_ip4_addr_t get_local_ip();
 
@@ -76,9 +76,14 @@ private:
 
     /// Password to use for connecting to @ref ssid_.
     const std::string password_;
-
-    /// Hostname to assign to this device.
+    
     const std::string hostname_;
+    
+    const std::string ipaddr_;
+
+    const std::string netmask_;
+
+    const std::string gateway_;
 
     /// ESP Station network interface in use.
     esp_netif_t *staIface_;
@@ -88,5 +93,6 @@ private:
 
     /// Bit mask used for checking WiFi connection process events.
     uint32_t wifiConnectBitMask_{WIFI_CONNECTED_BIT};
+	bool isValidIPv4(const char *IPAddress);
 
 };
