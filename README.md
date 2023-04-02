@@ -1,4 +1,4 @@
-# Esp32FeederController
+# Esp32FeederController & RGB WS2812 Controller
 
 The Esp32FeederController project allows controlling of multiple 0816 Feeders
 using four wire cables.
