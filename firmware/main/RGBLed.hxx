@@ -6,12 +6,12 @@
 #include <nvs.h>
 #include <nvs_flash.h>
 #include <string>
-using namespace std;
+using std::string;
+using std::transform;
 
 class RGBLed
 {
-public:
-	
+public:	
 	~RGBLed (){};
 	RGBLed (GCodeServer &server)
 	{
