@@ -30,8 +30,9 @@ public:
 
 	}
 	static constexpr const char *const TAG = "RGB_LED";
-	led_strip_handle_t led_strips[2];
-private:	
+		
+private:
+	led_strip_handle_t led_strips[2];	
 	template <typename T>
 	bool extract_arg(string arg_letter,
 									GCodeServer::command_args args,
@@ -56,22 +57,19 @@ private:
 	{
 		/* LED strip initialization with the GPIO and pixels number*/
 		led_strip_config_t strip_config = {
-			.strip_gpio_num = (uint32_t) led_io, // The GPIO that connected to the LED strip's data line
-			.max_leds = RGB_LED_COUNT, // The number of LEDs in the strip,
-			.led_pixel_format = LED_PIXEL_FORMAT_GRB, // Pixel format of your LED strip
-			.led_model = LED_MODEL_WS2812, // LED strip model
-			//.flags.invert_out = false, // whether to invert the output signal (useful when your hardware has a level inverter)
+			.strip_gpio_num = (uint32_t) led_io, 		// The GPIO that connected to the LED strip's data line
+			.max_leds = RGB_LED_COUNT, 					// The number of LEDs in the strip,
+			.led_pixel_format = LED_PIXEL_FORMAT_GRB, 	// Pixel format of your LED strip
+			.led_model = LED_MODEL_WS2812, 				// LED strip model
+			.flags = {.invert_out = false}, 			// whether to invert the output signal (useful when your hardware has a level inverter)
 		};
 
-		strip_config.flags.invert_out = false;
-		
 		led_strip_rmt_config_t rmt_config = {
-			.clk_src = RMT_CLK_SRC_DEFAULT, // different clock source can lead to different power consumption
-			.resolution_hz = 10 * 1000 * 1000, // 10MHz
-			//.flags.with_dma = false, // whether to enable the DMA feature
-		};
-		
-		rmt_config .flags.with_dma = false;
+			.clk_src = RMT_CLK_SRC_DEFAULT, 	// different clock source can lead to different power consumption
+			.resolution_hz = 10 * 1000 * 1000,	// 10MHz
+			.mem_block_symbols = 0, 			// increase the block size can make the LED less flickering
+			.flags = {.with_dma = false}, 		// whether to enable the DMA feature
+		};	
 		
 		ESP_ERROR_CHECK(led_strip_new_rmt_device(&strip_config, &rmt_config, &led_strip));		
 	}
@@ -134,7 +132,7 @@ private:
 	
 protected:
     
-    /// Command ID for moving a feeder.
-    static constexpr const char *const RGB_LED_ON_CMD = "M810";	
+    /// Command ID for RGB Led
+    static constexpr const char *const RGB_LED_ON_CMD  = "M810";	
 	static constexpr const char *const RGB_LED_OFF_CMD = "M811";	
 };
