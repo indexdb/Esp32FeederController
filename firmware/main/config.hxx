@@ -10,9 +10,9 @@
 #include <hal/gpio_types.h>
 
 /// WiFi AP to connect to.
-static constexpr const char * const WIFI_SSID = "MY_WIFI_SSID";
+static constexpr const char * const WIFI_SSID = "";
 /// Password to use for @ref WIFI_SSID.
-static constexpr const char * const WIFI_PASSWORD = "MY_WIFI_PASSWORD";
+static constexpr const char * const WIFI_PASSWORD = "";
 
 static constexpr const char * const WIFI_IP_ADRESS = "192.168.1.50";
 static constexpr const char * const WIFI_NETMASK = "255.255.255.0";
